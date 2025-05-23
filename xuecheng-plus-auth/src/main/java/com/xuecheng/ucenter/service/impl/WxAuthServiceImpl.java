@@ -45,9 +45,18 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
     RestTemplate restTemplate;
 
 
-    @Value("${weixin.appid}")
+    /**
+     * todo
+     */
+    //@Value("${weixin.appid}")
+    //String appid;
+    //@Value("${weixin.secret}")
+    //String secret;
+
+
+
     String appid;
-    @Value("${weixin.secret}")
+
     String secret;
 
     @Override
