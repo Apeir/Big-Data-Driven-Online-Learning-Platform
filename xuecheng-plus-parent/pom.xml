@@ -238,6 +238,11 @@
                             <version>${org.projectlombok.version}</version>
                         </path>
                     </annotationProcessorPaths>
+                    <fork>true</fork>
+                    <compilerArgs>
+                        <arg>--add-exports</arg>
+                        <arg>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
 
