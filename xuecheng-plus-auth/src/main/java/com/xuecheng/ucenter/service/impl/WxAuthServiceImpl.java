@@ -144,7 +144,7 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
      * @param code 授权
      * @return
      */
-    private Map<String,String> getAccess_token(String code){
+    Map<String,String> getAccess_token(String code){
 
         String url_template = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code";
         //最终的请求路径
@@ -185,7 +185,7 @@ public class WxAuthServiceImpl implements AuthService, WxAuthService {
      * @param openid
      * @return
      */
-    private Map<String,String> getUserinfo(String access_token,String openid){
+    Map<String,String> getUserinfo(String access_token, String openid){
 
         String url_template = "https://api.weixin.qq.com/sns/userinfo?access_token=%s&openid=%s";
         String url = String.format(url_template, access_token, openid);
