@@ -1,6 +1,5 @@
 package com.xuecheng.content.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.xuecheng.base.exception.XueChengPlusException;
 import com.xuecheng.content.mapper.TeachplanMapper;
 import com.xuecheng.content.mapper.TeachplanMediaMapper;
@@ -9,85 +8,97 @@ import com.xuecheng.content.model.dto.SaveTeachplanDto;
 import com.xuecheng.content.model.dto.TeachplanDto;
 import com.xuecheng.content.model.po.Teachplan;
 import com.xuecheng.content.model.po.TeachplanMedia;
-import com.xuecheng.content.service.TeachplanService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.*;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
-/**
- * @author Mr.M
- * @version 1.0
- * @description TODO
- * @date 2023/2/14 12:11
- */
-@Service
-public class TeachplanServiceImpl implements TeachplanService {
+class TeachplanServiceImplTest {
 
-    @Autowired
-    TeachplanMapper teachplanMapper;
+    @InjectMocks
+    private TeachplanServiceImpl teachplanService;
 
-    @Autowired
-    TeachplanMediaMapper teachplanMediaMapper;
+    @Mock
+    private TeachplanMapper teachplanMapper;
 
-    @Override
-    public List<TeachplanDto> findTeachplanTree(Long courseId) {
-        List<TeachplanDto> teachplanDtos = teachplanMapper.selectTreeNodes(courseId);
-        return teachplanDtos;
+    @Mock
+    private TeachplanMediaMapper teachplanMediaMapper;
+
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
-    private int getTeachplanCount(Long courseId,Long parentId){
-        LambdaQueryWrapper<Teachplan> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper = queryWrapper.eq(Teachplan::getCourseId, courseId).eq(Teachplan::getParentid, parentId);
-        Integer count = teachplanMapper.selectCount(queryWrapper);
-        return  count+1;
-    }
-    @Override
-    public void saveTeachplan(SaveTeachplanDto saveTeachplanDto) {
-        //通过课程计划id判断是新增和修改
-        Long teachplanId = saveTeachplanDto.getId();
-        if(teachplanId ==null){
-            //新增
-            Teachplan teachplan = new Teachplan();
-            BeanUtils.copyProperties(saveTeachplanDto,teachplan);
-            //确定排序字段，找到它的同级节点个数，排序字段就是个数加1  select count(1) from teachplan where course_id=117 and parentid=268
-            Long parentid = saveTeachplanDto.getParentid();
-            Long courseId = saveTeachplanDto.getCourseId();
-            int teachplanCount = getTeachplanCount(courseId, parentid);
-            teachplan.setOrderby(teachplanCount);
-            teachplanMapper.insert(teachplan);
+    @Test
+    void testFindTeachplanTree() {
+        Long courseId = 1L;
+        TeachplanDto dto = new TeachplanDto();
+        when(teachplanMapper.selectTreeNodes(courseId)).thenReturn(Collections.singletonList(dto));
 
-        }else{
-            //修改
-            Teachplan teachplan = teachplanMapper.selectById(teachplanId);
-            //将参数复制到teachplan
-            BeanUtils.copyProperties(saveTeachplanDto,teachplan);
-            teachplanMapper.updateById(teachplan);
-        }
-
+        List<TeachplanDto> result = teachplanService.findTeachplanTree(courseId);
+        assertEquals(1, result.size());
+        verify(teachplanMapper, times(1)).selectTreeNodes(courseId);
     }
 
-    @Transactional
-    @Override
-    public void associationMedia(BindTeachplanMediaDto bindTeachplanMediaDto) {
-        //课程计划id
-        Long teachplanId = bindTeachplanMediaDto.getTeachplanId();
-        Teachplan teachplan = teachplanMapper.selectById(teachplanId);
-        if(teachplan == null){
-            XueChengPlusException.cast("课程计划不存在");
-        }
+    @Test
+    void testSaveTeachplan_New() {
+        SaveTeachplanDto dto = new SaveTeachplanDto();
+        dto.setCourseId(1L);
+        dto.setParentid(0L);
+        dto.setId(null);
 
-        //先删除原有记录,根据课程计划id删除它所绑定的媒资
-        int delete = teachplanMediaMapper.delete(new LambdaQueryWrapper<TeachplanMedia>().eq(TeachplanMedia::getTeachplanId, bindTeachplanMediaDto.getTeachplanId()));
+        when(teachplanMapper.selectCount(any())).thenReturn(2);
 
-        //再添加新记录
-        TeachplanMedia teachplanMedia = new TeachplanMedia();
-        BeanUtils.copyProperties(bindTeachplanMediaDto,teachplanMedia);
-        teachplanMedia.setCourseId(teachplan.getCourseId());
-        teachplanMedia.setMediaFilename(bindTeachplanMediaDto.getFileName());
-        teachplanMediaMapper.insert(teachplanMedia);
+        teachplanService.saveTeachplan(dto);
+        verify(teachplanMapper).insert(any(Teachplan.class));
+    }
 
+    @Test
+    void testSaveTeachplan_Update() {
+        SaveTeachplanDto dto = new SaveTeachplanDto();
+        dto.setId(1L);
+        dto.setName("Updated Name");
+
+        Teachplan teachplan = new Teachplan();
+        teachplan.setId(1L);
+
+        when(teachplanMapper.selectById(1L)).thenReturn(teachplan);
+
+        teachplanService.saveTeachplan(dto);
+        verify(teachplanMapper).updateById(any(Teachplan.class));
+    }
+
+    @Test
+    void testAssociationMedia_Success() {
+        BindTeachplanMediaDto dto = new BindTeachplanMediaDto();
+        dto.setTeachplanId(100L);
+        dto.setMediaId("media123");
+        dto.setFileName("file.mp4");
+
+        Teachplan teachplan = new Teachplan();
+        teachplan.setId(100L);
+        teachplan.setCourseId(10L);
+
+        when(teachplanMapper.selectById(100L)).thenReturn(teachplan);
+
+        teachplanService.associationMedia(dto);
+
+        verify(teachplanMediaMapper).delete(any());
+        verify(teachplanMediaMapper).insert(any(TeachplanMedia.class));
+    }
+
+    @Test
+    void testAssociationMedia_TeachplanNotExist() {
+        BindTeachplanMediaDto dto = new BindTeachplanMediaDto();
+        dto.setTeachplanId(999L);
+
+        when(teachplanMapper.selectById(999L)).thenReturn(null);
+
+        assertThrows(XueChengPlusException.class, () -> teachplanService.associationMedia(dto));
+        verify(teachplanMediaMapper, never()).insert(any());
     }
 }
