@@ -2,17 +2,26 @@ package com.xuecheng.content.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.xuecheng.content.model.dto.AddCourseDto;
+import com.xuecheng.content.model.dto.CourseBaseInfoDto;
 import com.xuecheng.content.model.dto.EditCourseDto;
 import com.xuecheng.content.model.dto.QueryCourseParamsDto;
+import com.xuecheng.content.service.CourseBaseInfoService;
+import com.xuecheng.content.service.CoursePublishService;
+import com.xuecheng.content.service.TeachplanService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Collections;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * 覆盖 CourseBaseInfoController 所有接口，目标 100% 方法覆盖率
@@ -27,12 +36,26 @@ public class CourseBaseInfoControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @MockBean
+    private CourseBaseInfoService courseBaseInfoService;
+
+    @MockBean
+    private CoursePublishService coursePublishService;
+
+    @MockBean
+    private TeachplanService teachplanService; // ⬅️ 这是你必须 mock 掉的关键依赖
+
     /**
      * 测试 1：查询课程
      */
     @Test
     public void testGetCourseBaseById() throws Exception {
-        Long courseId = 40L; // 确保这个 ID 在数据库中存在
+        Long courseId = 40L;
+        CourseBaseInfoDto mockDto = new CourseBaseInfoDto();
+        mockDto.setId(courseId);
+        mockDto.setName("测试课程");
+        when(courseBaseInfoService.getCourseBaseInfo(courseId)).thenReturn(mockDto);
+
         mockMvc.perform(get("/course/{courseId}", courseId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(courseId));
@@ -55,6 +78,11 @@ public class CourseBaseInfoControllerTest {
         dto.setOriginalPrice(188.8f);
         dto.setQq("123456");
 
+        CourseBaseInfoDto mockDto = new CourseBaseInfoDto();
+        mockDto.setName(dto.getName());
+
+        when(courseBaseInfoService.createCourseBase(123214124L, dto)).thenReturn(mockDto);
+
         mockMvc.perform(post("/course")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
@@ -68,7 +96,7 @@ public class CourseBaseInfoControllerTest {
     @Test
     public void testModifyCourse() throws Exception {
         EditCourseDto dto = new EditCourseDto();
-        dto.setId(40L); // 确保这个 ID 在数据库中存在
+        dto.setId(40L);
         dto.setName("修改后的课程");
         dto.setMt("1-1");
         dto.setSt("1-1-1");
@@ -79,6 +107,12 @@ public class CourseBaseInfoControllerTest {
         dto.setPrice(99.9f);
         dto.setOriginalPrice(199.9f);
         dto.setQq("123456");
+
+        CourseBaseInfoDto mockDto = new CourseBaseInfoDto();
+        mockDto.setId(40L);
+        mockDto.setName("修改后的课程");
+
+        when(courseBaseInfoService.updateCourseBase(123214124L, dto)).thenReturn(mockDto);
 
         mockMvc.perform(put("/course")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -93,9 +127,14 @@ public class CourseBaseInfoControllerTest {
     @Test
     public void testListCourses() throws Exception {
         QueryCourseParamsDto paramsDto = new QueryCourseParamsDto();
-        paramsDto.setCourseName("");  // 可根据你的需求设置查询条件
+        paramsDto.setCourseName("");
         paramsDto.setAuditStatus("");
         paramsDto.setPublishStatus("");
+
+        // 这里不需要返回完整分页数据结构，只要确保不报错
+        when(courseBaseInfoService.queryCourseBaseList(
+                org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any()))
+                .thenReturn(new com.xuecheng.base.model.PageResult<>(Collections.emptyList(), 0, 1, 5));
 
         mockMvc.perform(post("/course/list")
                         .param("pageNo", "1")
@@ -103,6 +142,6 @@ public class CourseBaseInfoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(paramsDto)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.items").exists());  // 确认返回分页结构
+                .andExpect(jsonPath("$.items").exists());
     }
 }

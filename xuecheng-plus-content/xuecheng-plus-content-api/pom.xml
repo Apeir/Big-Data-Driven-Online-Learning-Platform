@@ -76,6 +76,7 @@
             <artifactId>spring-boot-starter-freemarker</artifactId>
         </dependency>
 
+        <!-- Spring Boot 集成 Junit -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
