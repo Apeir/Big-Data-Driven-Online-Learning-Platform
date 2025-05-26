@@ -33,7 +33,6 @@ import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -71,15 +70,15 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     OrderServiceImpl currentProxy;
 
-    @Value("${pay.qrcodeurl}")
+//    @Value("${pay.qrcodeurl}")
     String qrcodeurl;
 
-    @Value("${pay.alipay.APP_ID}")
+//    @Value("${pay.alipay.APP_ID}")
     String APP_ID;
-    @Value("${pay.alipay.APP_PRIVATE_KEY}")
+//    @Value("${pay.alipay.APP_PRIVATE_KEY}")
     String APP_PRIVATE_KEY;
 
-    @Value("${pay.alipay.ALIPAY_PUBLIC_KEY}")
+//    @Value("${pay.alipay.ALIPAY_PUBLIC_KEY}")
     String ALIPAY_PUBLIC_KEY;
 
     @Transactional

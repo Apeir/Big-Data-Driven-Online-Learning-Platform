@@ -6,7 +6,6 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradeWapPayRequest;
 import com.xuecheng.orders.config.AlipayConfig;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -29,12 +27,12 @@ import java.util.Map;
 
 @Controller
 public class PayTestController {
-    @Value("${pay.alipay.APP_ID}")
+//    @Value("${pay.alipay.APP_ID}")
     String APP_ID;
-    @Value("${pay.alipay.APP_PRIVATE_KEY}")
+//    @Value("${pay.alipay.APP_PRIVATE_KEY}")
     String APP_PRIVATE_KEY;
 
-    @Value("${pay.alipay.ALIPAY_PUBLIC_KEY}")
+//    @Value("${pay.alipay.ALIPAY_PUBLIC_KEY}")
     String ALIPAY_PUBLIC_KEY;
 
     //下单接口测试
