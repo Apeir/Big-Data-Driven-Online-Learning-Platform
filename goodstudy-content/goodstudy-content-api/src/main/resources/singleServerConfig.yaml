@@ -43,10 +43,10 @@ singleServerConfig:
   subscriptionConnectionPoolSize: 50
   #节点最小空闲连接数
   #默认值：32
-  connectionMinimumIdleSize: 32
+  connectionMinimumIdleSize: 10
   #节点连接池大小
   #默认值：64
-  connectionPoolSize: 64
+  connectionPoolSize: 20
 #这个线程池数量被所有RTopic对象监听器，RRemoteService调用者和RExecutorService任务共同共享。
 #默认值: 当前处理核数量 * 2
 threads: 8
