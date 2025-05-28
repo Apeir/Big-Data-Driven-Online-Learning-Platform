@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>goodstudy-learning</artifactId>
-        <groupId>com.xuecheng</groupId>
+        <groupId>com.goodstudy</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>goodstudy-learning-api</artifactId>
@@ -28,12 +28,12 @@
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.xuecheng</groupId>
+            <groupId>com.goodstudy</groupId>
             <artifactId>goodstudy-learning-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.xuecheng</groupId>
+            <groupId>com.goodstudy</groupId>
             <artifactId>goodstudy-learning-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

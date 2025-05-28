@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.xuecheng</groupId>
+        <groupId>com.goodstudy</groupId>
         <artifactId>goodstudy-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
         <!--基于当前pom.xml找到父工程-->
-        <relativePath>../xuecheng-plus-parent</relativePath>
+        <relativePath>../goodstudy-parent</relativePath>
     </parent>
     <artifactId>goodstudy-base</artifactId>
     <dependencies>

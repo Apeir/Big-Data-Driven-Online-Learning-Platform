@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>goodstudy-orders</artifactId>
-        <groupId>com.xuecheng</groupId>
+        <groupId>com.goodstudy</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>goodstudy-orders-api</artifactId>
@@ -19,12 +19,12 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.xuecheng</groupId>
+            <groupId>com.goodstudy</groupId>
             <artifactId>goodstudy-orders-model</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.xuecheng</groupId>
+            <groupId>com.goodstudy</groupId>
             <artifactId>goodstudy-orders-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

@@ -4,13 +4,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>goodstudy-content</artifactId>
-        <groupId>com.xuecheng</groupId>
+        <groupId>com.goodstudy</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>goodstudy-content-api</artifactId>
     <dependencies>
         <dependency>
-            <groupId>com.xuecheng</groupId>
+            <groupId>com.goodstudy</groupId>
             <artifactId>goodstudy-content-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

@@ -4,9 +4,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>goodstudy-parent</artifactId>
-        <groupId>com.xuecheng</groupId>
+        <groupId>com.goodstudy</groupId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../xuecheng-plus-parent</relativePath>
+        <relativePath>../goodstudy-parent</relativePath>
     </parent>
     <artifactId>goodstudy-message-sdk</artifactId>
 

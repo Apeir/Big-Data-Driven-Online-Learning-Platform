@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>goodstudy-system</artifactId>
-        <groupId>com.xuecheng</groupId>
+        <groupId>com.goodstudy</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>goodstudy-system-model</artifactId>
@@ -13,7 +13,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.xuecheng</groupId>
+            <groupId>com.goodstudy</groupId>
             <artifactId>goodstudy-base</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
